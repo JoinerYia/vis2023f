@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- D3, jquery -->
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" charset="utf-8"></script>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<title>作品集 Portfolio</title>
+<!-- https://alexlenail.me/NN-SVG/about.html -->
+<link rel="icon" href="../hw00/favicon.svg"/>
+<style type="text/css">
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200&display=swap');
+
+  table {
+  border-collapse: collapse;
+  border: 2px solid white; /* rgba(217,140,144,1) */
+  font-size:  12pt;
+  margin-left: auto;
+  margin-right: auto;
+  }
+
+  td,
+  th {
+  border: 1px solid white;
+  padding: 2px 8px;
+  }
+
+  .flipswitch
+  {
+      position: relative;
+      background: white;
+      width: 120px;
+      height: 20px;
+      -webkit-appearance: initial;
+      border-radius: 3px;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      outline:none;
+      font-size: 14px;
+      font-family: Trebuchet, Arial, sans-serif;
+      font-weight: bold;
+      cursor:pointer;
+      border:1px solid #ddd;
+  }
+  .flipswitch:after
+  {
+      position:absolute;
+      top:5%;
+      display:block; 
+      line-height:16px;
+      width:45%;
+      height:90%;
+      background:#fff;
+      box-sizing:border-box;
+      text-align:center;
+      transition: all 0.3s ease-in 0s; 
+      color:rgba(159,53,58,1);
+      border:#888 1px solid;
+      border-radius:3px;
+  }
+  .flipswitch:after
+  {
+      left:2%;
+      content: "未完成";
+  }
+  .flipswitch:checked:after
+  {
+      left:53%;
+      content: "完成";
+  }
+
+  body {
+    background-color: rgb(106, 76, 156); /* #6A4C9C */
+    color: rgb(106, 76, 156);
+    font-family: 'Noto Serif JP', serif;
+  }
+
+  .container-fluid {
+    width:  90%;
+  }
+
+  .hw12 {
+    border: 1px solid rgb(159, 53, 58);
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .twenty {
+    border: 1px solid #f9eced;
+    color: #f9eced;
+    padding: 8px;
+    font-size: 16pt;
+  }
+
+  .twenty:hover {
+      box-shadow: 0 0 5px 3px #f9eced;
+      color: cyan; 
+      text-shadow: 0 0 6px #FFFFFF, 0 0 6px #000000;
+  }
+
+  .github-corner:hover 
+  .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+  }
+  @keyframes octocat-wave {
+    0%,100% {
+      transform:rotate(0)
+    }
+    20%,60% {
+      transform:rotate(-25deg)
+    }
+    40%,80% {
+      transform:rotate(10deg)
+    }
+  }
+  @media (max-width:500px) {
+    .github-corner:hover 
+    .octo-arm {
+      animation:none
+    }
+
+    .github-corner 
+    .octo-arm {
+      animation: octocat-wave 560ms ease-in-out
+    }
+  }
+
+  /* 波浪 */
+  a {
+    color:yellow;
+    text-decoration: none; 
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath fill='none' stroke='%23fff' d='M0 3.5c5 0 5-3 10-3s5 3 10 3 5-3 10-3 5 3 10 3'/%3E%3C/svg%3E") repeat-x 0 100%; 
+    background-size:20px auto; 
+    animation: waveMove 1s infinite linear;
+  }
+
+  a:hover {
+    color:#f30;
+    text-decoration: none;
+    background: none;
+    animation: none;
+    text-decoration: underline;
+    padding:2px 0;
+  }
+  @keyframes waveMove {
+    from { background-position:0 100%; }
+    to { background-position:20px 100%; }
+  }
+  /* 波浪 */
+</style>
+</head>
+<body>
+<!-- https://alexlenail.me/NN-SVG/about.html -->
+
+<div class="container-fluid">
+  <!-- ------------------------------------------------>
+  <div class="row hw12">
+    <div class="col-md-12 twenty">
+      <table id="scoreTable">
+        
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+  function CreateAccount(seed){
+    var tempChar = "";
+    var result = "";
+    for (let index = 0; index < 4; index++) {
+      tempChar += String.fromCharCode(48+(seed*index+index)%10);
+      tempChar += String.fromCharCode(65+(seed*index+index)%26);
+      tempChar += String.fromCharCode(97+(seed*10+index*index+3)%26);
+    }
+    for (let index = 0; index < 10; index++) {
+      result += tempChar[((seed+index)*17)%12];
+    }
+    return result;
+  }
+
+  function CreateDummyTable(){
+    var table = document.getElementById("scoreTable");
+    var titles = ["序號","班級","學號","姓名","GitHub","作業一","作業二","作業三","作業四","作業五","作業六","作業七","作業八","作業九","作業十"];
+    var classes = ["資工系","資工所","電資AI","電資資安","創新AI"];
+    var classId = ["590","598","C52","C53","C71"];
+    var lastName = ["王","李","張","劉","陳","楊","黃","趙","吳","周","徐"];
+    var firstName = ["奕辰","宇軒","浩宇","宇辰","子墨","浩然","梓豪","亦宸","依諾","欣怡","梓涵","語桐","欣妍","可欣","語汐","雨桐","夢瑤"];
+    var dataRow = "";
+    var tempScore = 1;
+    var tempId = 1;
+    //標題列
+    dataRow = "<tr>";
+    for (let titleIndex = 0; titleIndex < titles.length; titleIndex++) {
+      dataRow += "<td>"+titles[titleIndex]+"</td>";
+    }
+    dataRow += "</tr>";
+    table.innerHTML += dataRow;
+    //學生內容
+    for (let index = 0; index < 120; index++) {
+      dataRow = "<tr>";
+      dataRow += "<td>"+(index+1)+"</td>";
+      dataRow += "<td>"+(classes[parseInt(index/24)])+"</td>";
+      tempId = "11"+(parseInt(index/12)%2+1);
+      tempId += classId[parseInt(index/24)];
+      tempId += ((index*13)%999+1).toString().padStart(3,"0");
+      dataRow += "<td>"+(tempId)+"</td>";
+      dataRow += "<td>"+(lastName[index%11]+firstName[index%17])+"</td>";
+      dataRow += "<td>"+(CreateAccount(index*7))+"</td>";
+      for (let HWIndex = 0; HWIndex < 10; HWIndex++) {
+        tempScore *= index^HWIndex;
+        tempScore %= 11;
+        if(tempScore==0)
+        {
+          tempScore = 2;
+        }
+        dataRow += "<td>"+tempScore+"</td>";
+      }
+      dataRow += "</tr>";
+      table.innerHTML += dataRow;
+    }
+  }
+  CreateDummyTable();
+</script>
+
+</body>
+</html>
