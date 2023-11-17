@@ -214,14 +214,14 @@
       <hr>
       <a href="https://observablehq.com/@yia-ws/hw2-medium-baseline-4pt">https://observablehq.com/@yia-ws/hw2-medium-baseline-4pt</a>   
       <hr>
-      <a href="https://joycehsu0.github.io/vis2023f/hw02/src/strong/">https://observablehq.com/@yia-ws/hw2-strong-baseline-2pt</a>
+      <a href="https://observablehq.com/@yia-ws/hw2-strong-baseline-2pt">https://observablehq.com/@yia-ws/hw2-strong-baseline-2pt</a>
       </div>
   </div>
 
   <!-- ------------------------------------------------>
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。
+      初次使用observable來製作圖表是個新鮮的體驗，原本做圖表第一個會想到Excel，除了產生圖表，還能對資料做些基礎的處理，但用observableb讓我覺得有了和資料互動的的可能性，會令我想研究研究，但過程的遇到的困難是星座要顯示中文，要以histogram顯示時發現圖表跑不出來，猜想是無法以中文當x值，所以還在研究。
     </div>
   </div>
 
@@ -229,29 +229,51 @@
   <div class="row hw12">
     <div class="col-md-12 twenty">
       <table>
-        <tr>
+        <tbody><tr>
           <th>總分</th>
           <th>完成後打勾</th>
           <th>配分</th>
           <th>分項描述</th>
         </tr>
+
         <tr>
-          <td rowspan="7" id="myTotal"></td>
-          <td><input type="checkbox" class="flipswitch" id="myCheckbox1"></td>
-          <td id='m1'>2</td>
-          <td>Simple baseline - 描述、描述、描述</td>
+          <td rowspan="16" id="myTotal">10</td>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox1" checked="checked"></td>
+          <td id="m1">2</td>
+          <td>Simple baseline-1 - 以histogram呈現每個年份出生的人數</td>
         </tr>
+
+          <tr>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox2" checked="checked"></td>
+          <td id="m2">2</td>
+          <td>Simple baseline-2 - 可調整margin, fill color, tip</td>
+        </tr>
+        
         <tr>
-          <td><input type="checkbox" class="flipswitch" id="myCheckbox2" checked></td>
-          <td id='m2'>6</td>
-          <td>Medium baseline - 描述、描述、描述 </td>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox3" checked="checked"></td>
+          <td id="m3">2</td>
+          <td>Medium baseline-1 - 以bar chart呈現每個年份出生的人數</td>
         </tr>
+
         <tr>
-          <td><input type="checkbox" class="flipswitch" id="myCheckbox3"></td>
-          <td id='m3'>2</td>
-          <td>Strong baseline - 描述、描述、描述 </td>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox4" checked="checked"></td>
+          <td id="m4">2</td>
+          <td>Medium baseline-2 - 可調整margin, fill color, tip </td>
         </tr>
-      </table>
+        
+        <tr>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox5" checked="checked"></td>
+          <td id="m5">1</td>
+          <td>Strong baseline-1 - 以bar chart呈現每個星座的人數 </td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox6"></td>
+          <td id="m6">1</td>
+          <td>Strong baseline-2 - 以histogram呈現每個星座的人數 </td>
+        </tr>
+        
+      </tbody></table>
     </div>
   </div>
 
@@ -266,7 +288,7 @@
 
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      <iframe scrolling="no" sandbox="allow-downloads allow-forms allow-popups-to-escape-sandbox allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" allow="accelerometer; autoplay; clipboard-write; camera; encrypted-media; fullscreen; geolocation; gyroscope; magnetometer; microphone; midi; vr" src="https://vis2023f-joyce.static.observableusercontent.com/next/worker-2b3bcb9c.html" style="width: calc(100% + 28px); margin: 0px -14px; border: none; height: 1122px;">
+      <iframe src="./src/simple/index.html" width="100%" height="500" frameborder="0" style="background-color: #FFFFFF">
         
       </iframe>
     </div>
@@ -280,7 +302,9 @@
 
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      
+      <iframe src="./src/medium/index.html" width="100%" height="500" frameborder="0" style="background-color: #FFFFFF">
+        
+      </iframe>
     </div>
   </div>
 
@@ -292,7 +316,9 @@
 
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      
+      <iframe src="./src/strong/index.html" width="100%" height="500" frameborder="0" style="background-color: #FFFFFF">
+        
+      </iframe>
     </div>
   </div>
   <!-- ------------------------------------------------>
@@ -312,7 +338,6 @@
   d3.select("#myCheckbox4").on("change",update);
   d3.select("#myCheckbox5").on("change",update);
   d3.select("#myCheckbox6").on("change",update);
-  d3.select("#myCheckbox7").on("change",update);
 
   update();
   
@@ -320,17 +345,29 @@
 
     var score = 0;
 
-    if (d3.select("#myCheckbox1").property("checked")){
-      score += parseInt(d3.select('#m1').html());
-    }
+if (d3.select("#myCheckbox1").property("checked")){
+  score += parseInt(d3.select('#m1').html());
+}
 
-    if (d3.select("#myCheckbox2").property("checked")){
-      score += parseInt(d3.select('#m2').html());   
-    }
+if (d3.select("#myCheckbox2").property("checked")){
+  score += parseInt(d3.select('#m2').html());   
+}
 
-    if (d3.select("#myCheckbox3").property("checked")){
-      score += parseInt(d3.select('#m3').html());   
-    }
+if (d3.select("#myCheckbox3").property("checked")){
+  score += parseInt(d3.select('#m3').html());   
+}
+
+if (d3.select("#myCheckbox4").property("checked")){
+  score += parseInt(d3.select('#m4').html());
+}
+
+if (d3.select("#myCheckbox5").property("checked")){
+  score += parseInt(d3.select('#m5').html());   
+}
+
+if (d3.select("#myCheckbox6").property("checked")){
+  score += parseInt(d3.select('#m6').html());   
+}
 
     d3.select("#myTotal").html(score);    
   }

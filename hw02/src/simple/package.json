@@ -1,0 +1,14 @@
+{
+  "name": "@yia-ws/hw2-simple-baseline-4pt",
+  "main": "0644f5f742a33699@43.js",
+  "version": "43.0.0",
+  "homepage": "https://observablehq.com/@yia-ws/hw2-simple-baseline-4pt",
+  "author": {
+    "name": "Yia's Workspace",
+    "url": "https://observablehq.com/@yia-ws"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}

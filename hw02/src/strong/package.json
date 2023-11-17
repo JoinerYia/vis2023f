@@ -1,0 +1,14 @@
+{
+  "name": "@yia-ws/hw2-strong-baseline-2pt",
+  "main": "1aaefb7f41eb3114@70.js",
+  "version": "70.0.0",
+  "homepage": "https://observablehq.com/@yia-ws/hw2-strong-baseline-2pt",
+  "author": {
+    "name": "Yia's Workspace",
+    "url": "https://observablehq.com/@yia-ws"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
