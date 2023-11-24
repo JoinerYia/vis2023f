@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- D3, jquery -->
-<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://d3js.org/d3.v7.min.js" charset="utf-8"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" charset="utf-8"></script>
 
 <!-- Bootstrap CSS -->
@@ -160,105 +160,65 @@
 <!-- https://alexlenail.me/NN-SVG/about.html -->
 
 <div class="container-fluid">
-  <button onclick="GetTableToCSV()">Download CSV</button>
   <!-- ------------------------------------------------>
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      <table id="scoreTable">
-        
-      </table>
+      <h3>Data Visualization 成績</h3>
     </div>
   </div>
-</div>
 
-<script>
-  function CreateAccount(seed){
-    var tempChar = "";
-    var result = "";
-    for (let index = 0; index < 4; index++) {
-      tempChar += String.fromCharCode(48+(seed*index+index)%10);
-      tempChar += String.fromCharCode(65+(seed*index+index)%26);
-      tempChar += String.fromCharCode(97+(seed*10+index*index+3)%26);
-    }
-    for (let index = 0; index < 10; index++) {
-      result += tempChar[((seed+index)*17)%12];
-    }
-    return result;
+  <div class="row hw12">
+    <div class="col-md-12 twenty">
+      <table id="scoreSample">
+      </table>
+    </div>
+
+  </div><div class="row hw12">
+    <div class="col-md-12 twenty">      
+      <table id="scoreTable">
+      </table>      
+    </div>
+  </div>
+<script type="text/javascript" charset="utf-8">
+  function GetScoreImagePath(score){
+    score = Number(score);
+    imgName = "../image/"+ Math.floor((score+1)/2)+ (2-(score%2))+ ".svg";
+    return imgName;
   }
 
-  function CreateDummyTable(){
-    var table = document.getElementById("scoreTable");
-    var titles = ["序號","班級","學號","姓名","GitHub","作業一","作業二","作業三","作業四","作業五","作業六","作業七","作業八","作業九","作業十"];
-    var classes = ["資工系","資工所","電資AI","電資資安","創新AI"];
-    var classId = ["590","598","C52","C53","C71"];
-    var lastName = ["王","李","張","劉","陳","楊","黃","趙","吳","周","徐"];
-    var firstName = ["奕辰","宇軒","浩宇","宇辰","子墨","浩然","梓豪","亦宸","依諾","欣怡","梓涵","語桐","欣妍","可欣","語汐","雨桐","夢瑤"];
-    var dataRow = "";
-    var tempScore = 1;
-    var tempId = 1;
-    //標題列
-    dataRow = "<thead>\n<tr>\n";
-    for (let titleIndex = 0; titleIndex < titles.length; titleIndex++) {
-      dataRow += "<th>"+titles[titleIndex]+"</th>\n";
-    }
-    dataRow += "</tr>\n</thead>\n";
-    table.innerHTML += dataRow;
-    //學生內容
-    dataRow = "<tbody>\n";
-    for (let index = 0; index < 120; index++) {
-      dataRow += "<tr>\n";
-      dataRow += "<td>"+(index+1)+"</td>\n";
-      dataRow += "<td>"+(classes[parseInt(index/24)])+"</td>\n";
-      tempId = "11"+(parseInt(index/12)%2+1);
-      tempId += classId[parseInt(index/24)];
-      tempId += ((index*13)%999+1).toString().padStart(3,"0");
-      dataRow += "<td>"+(tempId)+"</td>\n";
-      dataRow += "<td>"+(lastName[index%11]+firstName[index%17])+"</td>\n";
-      dataRow += "<td>"+(CreateAccount(index*7))+"</td>\n";
-      for (let HWIndex = 0; HWIndex < 10; HWIndex++) {
-        tempScore *= index^HWIndex;
-        tempScore %= 11;
-        if(tempScore==0)
-        {
-          tempScore = 2;
+  d3.select("#scoreSample")
+    .append("tr")
+    .selectAll("td")
+    .data([10,9,8,7,6,5,4,3,2,1,0])
+    .enter()
+    .append("td")
+    .text(function (d, i) {
+        if (i <= 10 || isNaN(d)) {
+            return d;
         }
-        dataRow += "<td>"+tempScore+"</td>\n";
-      }
-      dataRow += "</tr>\n";
-    }
-    dataRow += "</tbody>\n";
-    table.innerHTML += dataRow;
-  }
-  CreateDummyTable();
-  
-  function GetTableToCSV(){
-    csvData="";
-    table = document.getElementById("scoreTable");
+    })
+    .attr("class", function (d, i) { 
+        if (d == 10) return "excellent-kid"; 
+        else if (d >= 7 ) return "good-kid"; 
+        else if (d >= 2 ) return "fair-kid"; 
+        else return "poor-kid";})
+    .append("img")
+    .attr("src", function (d, i) {
+        return GetScoreImagePath(d);
+    })
+    .attr("x", "0")
+    .attr("y", "0")
+    .attr("width", 60)
+    .attr("height", 60);
 
-    for(var i=0; i<table.rows.length; i++)
-    {
-      csvData += table.rows[i].innerText.replaceAll("\t",",");
-      csvData += "\n"
-    }
-    
-    console.log(csvData);
-    DownloadCSV(csvData);
-  }
-
-  function DownloadCSV(csvData){
-    var exportFile = new Blob([csvData],{
-      type: "text/csv"
+    d3.text("../data/data.csv", function(data){
+      var scoreData= d3.csv.parseRows(data);
+      var table = d3.select("#scoreTable")
+        .selectAll("tr")
+        .data(scoreData)
+        
     });
-
-    var tempLink = document.createElement("a");
-    var url = window.URL.createObjectURL(exportFile);
-    tempLink.href= url
-    tempLink.download= "data.csv";
-    tempLink.style.display = "none";
-    tempLink.click();
-    window.URL.revokeObjectURL(url);
-    console.log("Download Complete");
-  }
+    
 </script>
 
 </body>
